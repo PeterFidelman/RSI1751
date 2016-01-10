@@ -38,16 +38,9 @@ def wordToByte(word):
 	except ValueError:
 		return 256
 
-# bytes to english
-def b2e():
-	chars = "".join(sys.stdin.readlines())
-	bytea = bytearray(chars)
-	for b in bytea:
-		print byteToWord(b),
-
-# bytes to printout
-# the format of a printout is n words plus one parity word
-def b2p(wordsPerLine):
+# bytes to hardcopy
+# hardcopy format is lineno + n words + one parity word
+def b2h(wordsPerLine):
 	chars = "".join(sys.stdin.readlines())
 	bytea = bytearray(chars)
 	lineno = 0
@@ -65,6 +58,41 @@ def b2p(wordsPerLine):
 			print byteToWord(parity)
 			parity = 0
 			lineno += 1
+
+	if colno != 0:
+		print byteToWord(parity)
+
+
+# hardcopy to bytes
+def h2b():
+	lines = sys.stdin.readlines()
+	lineno = 0
+	parity = 0
+
+	for l in lines:
+		l = l.strip()
+		if len(l) % 3 != 0:
+			raise Exception("line %d:  incomplete word" % lineno)
+		words = [l[i:i+3] for i in range(0, len(l), 3)]
+
+		for w in words[:-1]:
+			i = wordToByte(w)
+			if i == 256:
+				raise Exception("line %d:  unknown word %s" %
+					(lineno, w))
+			parity ^= i
+			sys.stdout.write(chr(i))
+		for w in [words[-1],]:
+			i = wordToByte(w)
+			if i == 256:
+				raise Exception("line %d:  unknown word %s" %
+					(lineno, w))
+			if (parity != i):
+				raise Exception("line %d:  parity error" %
+					lineno)
+			parity = 0
+			lineno += 1
+			
 
 # english to bytes
 def e2b():
@@ -85,9 +113,8 @@ def e2b():
 def usage():
 	print
 	print "usage:  " + str(sys.argv[0]) + " [--e2b] [--b2e]"
-	print "    --e2b        english to bytes"
-	print "    --b2e        bytes to english"
-	print "    --b2p        bytes to printout"
+	print "    --b2h        bytes to hardcopy"
+	print "    --h2b        hardcopy to bytes"
 	print
 
 def main():
@@ -96,12 +123,10 @@ def main():
 	except:
 		mode = None
 
-	if (mode == "--e2b"):
-		e2b()
-	elif (mode == "--b2e"):
-		b2e()
-	elif (mode == "--b2p"):
-		b2p(4)
+	if (mode == "--b2h"):
+		b2h(8)
+	elif (mode == "--h2b"):
+		h2b()
 	else:
 		usage()
 
