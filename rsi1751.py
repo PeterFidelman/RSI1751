@@ -124,7 +124,7 @@ def main():
 		mode = None
 
 	if (mode == "--b2h"):
-		b2h(8)
+		b2h(8-1)
 	elif (mode == "--h2b"):
 		h2b()
 	else:
