@@ -43,7 +43,7 @@ def wordToByte(word):
 def b2h(wordsPerLine):
 	chars = "".join(sys.stdin.readlines())
 	bytea = bytearray(chars)
-	lineno = 0
+	lineno = 1
 	colno = 0
 	parity = 0
 
@@ -66,7 +66,7 @@ def b2h(wordsPerLine):
 # hardcopy to bytes
 def h2b():
 	lines = sys.stdin.readlines()
-	lineno = 0
+	lineno = 1
 	parity = 0
 
 	for l in lines:
