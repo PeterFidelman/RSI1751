@@ -112,7 +112,7 @@ def e2b():
 
 def usage():
 	print
-	print "usage:  " + str(sys.argv[0]) + " [--e2b] [--b2e]"
+	print "usage:  " + str(sys.argv[0]) + " [--b2h] [--h2b]"
 	print "    --b2h        bytes to hardcopy"
 	print "    --h2b        hardcopy to bytes"
 	print
