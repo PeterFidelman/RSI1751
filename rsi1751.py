@@ -65,6 +65,13 @@ def b2h(wordsPerLine):
 
 # hardcopy to bytes
 def h2b():
+	# workaround to keep Windows from munging binary data
+	# http://stackoverflow.com/a/2374443
+	if sys.platform == "win32":
+		import os, msvcrt
+		msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+
+	# we now return you to your regularly scheduled program
 	lines = sys.stdin.readlines()
 	lineno = 1
 	parity = 0
@@ -92,23 +99,6 @@ def h2b():
 					lineno)
 			parity = 0
 			lineno += 1
-			
-
-# english to bytes
-def e2b():
-	# workaround to keep Windows from munging binary data
-	# http://stackoverflow.com/a/2374443
-	if sys.platform == "win32":
-		import os, msvcrt
-		msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
-
-	chars = "".join(sys.stdin.readlines())
-	worda = chars.split()
-	for w in worda:
-		i = wordToByte(w)
-		if i == 256:
-			raise Exception("Bad word %s" % w)
-		sys.stdout.write(chr(i))
 
 def usage():
 	print
